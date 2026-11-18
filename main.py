@@ -56,13 +56,21 @@ W_SMALL_HOUR1 = 0.6     # hour 1 under 8% of its day peak
 # a similar size to this one dominate the pool.
 SIZE_BANDWIDTH = 0.45
 # The pooled median log-ratio is shrunk toward persistence (0) by this
-# factor, easing from the first forecast hour to the last.
-MED_SHRINK_START = 0.9
-MED_SHRINK_END = 0.8
+# factor, easing from the first forecast hour to the last. The easing is
+# mild: leave-one-out scoring over the case file's own comparables showed
+# the pooled median only mildly overshoots for launches like this one,
+# while a stronger shrink badly under-forecasts the launches whose curves
+# keep climbing after hour 1.
+MED_SHRINK_START = 0.95
+MED_SHRINK_END = 0.9
 # Spread: the pooled IQR gives the sigmas, scaled, and floored against the
 # persistence baseline's random-walk spread of 0.15 per square-root hour.
-SIG_SCALE = 0.9
-SIG_FLOOR_FRAC = 0.5
+# The same leave-one-out scoring recalibrated the pair: the pooled IQR
+# overstates the width of the centre band (hence the 0.65 scale), but it
+# stays flat across the day while real curves keep spreading, so the
+# random-walk floor has to bind harder in the late hours (0.7 of it).
+SIG_SCALE = 0.65
+SIG_FLOOR_FRAC = 0.7
 BASE_SIGMA = 0.15
 # The case's own pre-release momentum: if the last whole hour before the
 # day ran above hour 1 (log ratio pre_last), the early hours are nudged by
